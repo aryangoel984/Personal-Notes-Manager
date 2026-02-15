@@ -1,0 +1,50 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String     // Store hashed passwords here
+  notes     Note[]
+  bookmarks Bookmark[]
+  createdAt DateTime   @default(now())
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  tags      String[] // Native Postgres array for easy filtering
+  isFavorite Boolean @default(false)
+  
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Bookmark {
+  id          String   @id @default(uuid())
+  url         String
+  title       String?  // Optional, can be auto-fetched
+  description String?
+  tags        String[]
+  isFavorite  Boolean  @default(false)
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
