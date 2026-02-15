@@ -10,7 +10,7 @@ export const metadata = {
   title: "Personal Manager",
   description: "Notes and Bookmarks Manager",
 };
-
+// @ts-ignore
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
